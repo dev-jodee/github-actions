@@ -97,6 +97,7 @@ Customize the workflow to your needs!
     - `locked`: Pass `--locked` to `cargo publish`
     - `allow-dirty`: Pass `--allow-dirty` to `cargo publish`
     - `dry-run`: Validate without publishing to crates.io
+    - `validate-auth`: Request a Trusted Publishing token without requiring a crates.io publish
     - `check-version-available`: Fail early when this crate version already exists on crates.io
     - `skip-existing`: Skip publishing successfully when this crate version already exists on crates.io
     - `allowed-refs`: Space-separated refs allowed to publish, or empty to disable
@@ -104,6 +105,7 @@ Customize the workflow to your needs!
     - `package`: Published package name
     - `version`: Published package version
     - `published`: Whether the action published to crates.io
+    - `authenticated`: Whether the action retrieved a crates.io Trusted Publishing token
     - `already-published`: Whether this crate version already existed on crates.io
 
 Caller workflows must grant OIDC token access and configure Trusted Publishing for the crate on crates.io. The Trusted Publisher configuration should match the caller repository and workflow file, not this shared action repository:
@@ -149,6 +151,20 @@ Generated client:
     working-directory: clients/rust
     allow-dirty: "true"
     skip-existing: "true"
+```
+
+Trusted Publishing auth check without uploading:
+
+```yaml
+- uses: actions/checkout@v6
+
+- uses: solana-developers/github-actions/cargo-publish@main
+  with:
+    package: subscriptions
+    working-directory: clients/rust
+    dry-run: "true"
+    validate-auth: "true"
+    check-version-available: "false"
 ```
 
 ### Deployment
